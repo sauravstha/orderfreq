@@ -39,7 +39,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://localhost:8181/orderfreq/public'),
 
     /*
     |--------------------------------------------------------------------------
@@ -202,6 +202,16 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+    ],
+
+    'uploadPath' => [
+        'User' => 'users/',
+        'Product' => 'products/',
+    ],
+
+    'uploadUrl' => [
+        'User' => 'storage/users/',
+        'Product' => 'storage/products/',
     ],
 
 ];
