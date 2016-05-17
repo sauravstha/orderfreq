@@ -22,3 +22,7 @@ Route::get('/home', 'HomeController@index');
 Route::get('/user','UserController@index');
 
 Route::post('/user','UserController@store');
+
+Route::get('/products','ProductController@index');
+
+Route::post('/products','ProductController@store');
