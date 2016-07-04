@@ -10,6 +10,7 @@ class OrderProduct extends Model
 {
     //
     protected $table = "orderproducts";
+    public $timestamps = false;
 
     /**
      * @return Get the order of the order product.

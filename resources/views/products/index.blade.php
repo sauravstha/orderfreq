@@ -1,126 +1,64 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
+<div class="col-sm-2" style="text-align: center;">
+    <h3>Categories</h3>
+    <br>
+    <div>
+        <a href="{{ url('/products') }}" class="btn btn-primary" role="button" style="width: 100%">All products</a>
+        @foreach ($categories as $category)
+        <a href="{{ url('/products/categories/'.$category->id) }}" class="btn btn-primary" role="button" style="width: 100%">{{ $category->name }}</a>
+        @endforeach
+    </div>
+</div>
+
+<div class="container" style="text-align: center;">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Products</div>
+        <div class="col-sm-10">
 
-                <div class="panel-body">
-                    
-                   <form class="form-horizontal" role="form" method="POST" action="{{ url('/products') }}" enctype="multipart/form-data">
-                        {!! csrf_field() !!}
+            @if ($currentCategory == NULL) 
+            <h3>Products</h3>
+            @endif
 
-                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Product Name</label>
+            @foreach ($categories as $category)
+            @if ( $category->id == $currentCategory )
+            <h3>Products by {{ $category->name }}</h3>
+            @endif 
+            @endforeach
 
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="name" value="{{ old('name') }}">
-
-                                @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+            <br />
+            @foreach ($products as $product)
+            <div class="col-sm-4" style="text-align: center; margin-bottom: 30px">
+                <a class="modal-modal" href="{{ url('/orderlists/products/'. $product->id) }}" data-toggle="modal" data-target=".bs-example-modal-lg">
+                    <div class="panel panel-default" title="{{ $product->name }}">
+                        <div class="panel-heading" style="clear: both; display: block; overflow: hidden; white-space:pre;">{{ $product->name }}</div>
+                        <div class="panel-body" >
+                            <img src="{{ asset($productUploadUrl . $product->photo) }}" height="100px">
                         </div>
+                        <div class="panel-footer">Rs. {{ $product->selling_price }}</div>
+                    </div>
+                </a>
+            </div>  
+            @endforeach
 
-                        <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Product Description</label>
+        </div>
+        {!! $products->render() !!}
+    </div>
+</div>
 
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="description" value="{{ old('description') }}">
+<div id="myModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
 
-                                @if ($errors->has('description'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('description') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('cost_price') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Cost Price</label>
-
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="cost_price" value="{{ old('cost_price') }}">
-
-                                @if ($errors->has('cost_price'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('cost_price') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('selling_price') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Selling Price</label>
-
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="selling_price" value="{{ old('selling_price') }}">
-
-                                @if ($errors->has('selling_price'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('selling_price') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('stock_quantity') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Stock Quantity</label>
-
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="stock_quantity" value="{{ old('stock_quantity') }}">
-
-                                @if ($errors->has('stock_quantity'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('stock_quantity') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('category_id') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Category</label>
-
-                            <div class="col-md-6">
-                                <input type="text" class="form-control" name="category_id" value="{{ old('category_id') }}">
-
-                                @if ($errors->has('category_id'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('category_id') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('photo') ? ' has-error' : '' }}">
-                            <label class="col-md-4 control-label">Photo</label>
-
-                            <div class="col-md-6">
-                                <input type="file" class="form-control" name="photo" value="{{ old('photo') }}">
-
-                                @if ($errors->has('photo'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('photo') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-btn fa-upload">Upload</i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
 </div>
+
+
+<script type="text/javascript">
+    $('body').on('hidden.bs.modal', '.modal', function () {
+        $(this).removeData('bs.modal');
+      });
+</script>
+
 @endsection

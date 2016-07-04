@@ -3,13 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\User;
 use App\Order;
 
 class DeliveryAddress extends Model
 {
+    use SoftDeletes;
+
     //
-    protected $table = "deliveryaddresses";
+    protected $table = "deliveryaddresses";  
+    public $timestamps = false;
 
     /**
      * @return Get the user for the delivery address.
@@ -33,6 +37,6 @@ class DeliveryAddress extends Model
      * @var array
      */
     protected $fillable = [
-        'address', 'city', 'district', 'pincode', 'user_id',
+        'address', 'city', 'district', 'pincode', 'user_id', 'status',
     ];
 }

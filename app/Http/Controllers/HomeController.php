@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests;
 use Illuminate\Http\Request;
+use App\User;
+use App\Order;
+use Storage;
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
@@ -22,8 +26,22 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('home');
+        $user = $request->user();
+        $userUploadUrl = config('app.uploadUrl.User');
+
+        $orders = Order::get();
+        $orderUploadUrl = config('app.uploadUrl.Order');
+
+        return view('home.index',[
+            'orders' => $orders,
+            'orderUploadUrl' => $orderUploadUrl,
+
+            'user' => $user,
+
+            'photo' => asset($userUploadUrl .$user->photo),
+            'userUploadUrl' => $userUploadUrl,
+        ]);
     }
 }

@@ -3,21 +3,25 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\OrderList;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Orderlist;
 use App\OrderProduct;
 use App\DeliveryAddress;
 
 class Order extends Model
 {
+    use SoftDeletes;
+    
     //
     protected $table = "orders";
+    public $timestamps = false;
 
     /**
      * @return Get the order list of the order.
      */
-    public function orderList()
+    public function orderlist()
     {
-        return $this->belongsTo(OrderList::class);
+        return $this->belongsTo(Orderlist::class, 'orderlist_id');
     }
 
     /**
@@ -33,7 +37,7 @@ class Order extends Model
      */
     public function deliveryAddress()
     {
-        return $this->belongsTo(DeliveryAddress::class);
+        return $this->belongsTo(DeliveryAddress::class, 'deliveryaddress_id');
     }
 
     /**
@@ -42,6 +46,7 @@ class Order extends Model
      * @var array
      */
     protected $fillable = [
-        'orderlist_id', 'status', 'delivery_date', 'delivered_date', 'order_date', 'delivery_address_id',
+        'orderlist_id', 'status', 'delivery_date', 'delivered_date', 'order_date', 'deliveryaddress_id', 'status',
+    
     ];
 }

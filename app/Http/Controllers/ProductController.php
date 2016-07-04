@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use Illuminate\Http\Request;
+use App\Orderlist;
 use App\Product;
+use App\Category;
 use Storage;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -22,61 +25,31 @@ class ProductController extends Controller
 
 
     public function index(Request $request)
-	{
-
-
-		return view('products.index');        
-	}
-
-	
-
-	protected function store(Request $request)
     {
-        $this->validate($request, [
-            'photo' => 'required|image',
-            'name' => 'required|max:255',
-            'description' => 'max:255',
-            'cost_price' => 'required|max:255',
-            'selling_price' => 'required|max:255',
-            'stock_quantity' => 'required',
-            'catrgory_id' => 'required',
-        ]);
 
-        // Get photo from form.
-	    $photo = $request->file('photo');
-	    $photoFileName = $photo->getClientOriginalName();
-	    $photoPath = $photo->getRealPath();
+        $orderlists = Orderlist::get();
+        $categories = Category::get();
 
-	    // Get current products.
-	    $products = $request->products();
+        if(isset($request->category))
+        {
+            $currentCategory = $request->category;
+            $products = Product::where('category_id', $currentCategory)->paginate(9);
+        }
+        else
+        {
+            $currentCategory = NULL;
+            $products = Product::paginate(9);
+        }
 
-	    // Save photo filename
-	    $products->photo = $photoFileName;
-	    $products->save();
+        $productUploadUrl = config('app.uploadUrl.Product');
 
-	    // Get products upload location
-	    $uploadLocation = config('app.uploadPath.Product');
+        return view('products.index',[
 
-        // Uploads photo to the directory.
-        Storage::disk('public')->put(
-            $uploadLocation.$photoFileName,
-            file_get_contents($photoPath)
-        );
-
-        return redirect('/products');
+            'orderlists' => $orderlists,
+            'currentCategory' => $request->category,
+            'products' => $products,
+            'productUploadUrl' => $productUploadUrl,
+            'categories' => $categories,
+        ]);        
     }
-
-    protected function create(array $data)
-    {
-        return Product::create([
-            'name' => $data['name'],
-            'description' => $data['description'],
-            'cost_price' => $data['cost_price'],
-            'selling_price' => $data['selling_price'],
-            'stock_quantity' => $data['stock_quantity'],
-            'category_id' => $data['category_id'],
-            'photo' => $data['a'],
-        ]);
-    }
-
 }

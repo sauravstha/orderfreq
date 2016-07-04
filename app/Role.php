@@ -9,6 +9,8 @@ class Role extends Model
 {
     //
     protected $table = "roles";
+    
+    public $timestamps = false;
 
     /**
      * @return Get the users of the role.

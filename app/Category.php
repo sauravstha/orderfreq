@@ -3,20 +3,32 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Product;
 
 class Category extends Model
 {
+    use SoftDeletes;
+    
     //
 
     protected $table = "categories";
+    public $timestamps = false;
 
     /**
      * @return Get the parent category of current category
      */
-    public function parentCategory()
+    public function parent()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class, 'parent_id');
+    }
+
+    /**
+     * @return Get the child categories of current category
+     */
+    public function children()
+    {
+        return $this->hasMany(Category::class, 'parent_id');
     }
 
     /**
@@ -33,6 +45,6 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'parent_id',
+        'name', 'parent_id', 'status',
     ];
 }

@@ -3,14 +3,18 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Category;
 use App\OrderProduct;
-use App\OrderListProduct;
+use App\OrderlistProduct;
 
 class Product extends Model
 {
+    use SoftDeletes;
+    
     //
     protected $table = "products";
+    public $timestamps = false;
 
     /**
      * @return Get the category of the product.
@@ -31,9 +35,9 @@ class Product extends Model
     /**
      * @return Get the orderlist products for the product.
      */
-    public function orderListProducts()
+    public function orderlistProducts()
     {
-        return $this->hasMany(OrderListProduct::class);
+        return $this->hasMany(OrderlistProduct::class);
     }
 
     /**
@@ -42,6 +46,6 @@ class Product extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'cost_price', 'selling_price', 'stock_quantity', 'category_id', 'photo',
+        'name', 'description', 'cost_price', 'selling_price', 'stock_quantity', 'category_id', 'photo', 'status',
     ];
 }

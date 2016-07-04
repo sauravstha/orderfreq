@@ -3,13 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\User;
-use App\OrderList;
+use App\Orderlist;
 
 class Home extends Model
 {
+    use SoftDeletes;
+    
     //
-    protected $table = "homes";
+    protected $table = "homes";    
+    public $timestamps = false;
 
     /**
      * @return Get the user of the home.
@@ -22,9 +26,9 @@ class Home extends Model
     /**
      * @return Get the order lists of the home.
      */
-    public function orderLists()
+    public function orderlists()
     {
-        return $this->hasMany(OrderList::class);
+        return $this->hasMany(Orderlist::class);
     }
 
     /**
@@ -33,6 +37,7 @@ class Home extends Model
      * @var array
      */
     protected $fillable = [
-        'address', 'city', 'district', 'pincode', 'phone', 'user_id',
+        'address', 'city', 'district', 'pincode', 'phone', 'user_id', 'status',
+    
     ];
 }

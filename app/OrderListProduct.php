@@ -3,20 +3,21 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\OrderList;
+use App\Orderlist;
 use App\Product;
 
-class OrderListProduct extends Model
+class OrderlistProduct extends Model
 {
     //
     protected $table = "orderlistproducts";
+    public $timestamps = false;
 
     /**
      * @return Get the order list of the orderlist product.
      */
-    public function orderList()
+    public function orderlist()
     {
-        return $this->belongsTo(OrderList::class);
+        return $this->belongsTo(Orderlist::class);
     }
 
     /**
